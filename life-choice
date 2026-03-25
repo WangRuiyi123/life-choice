@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎀 LifeChoice.exe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+        }
+
+        body {
+            font-family: 'VT323', 'Courier New', monospace;
+            background: #c0c0c0;
+            background-image: 
+                linear-gradient(45deg, #d4d4d4 25%, transparent 25%), 
+                linear-gradient(-45deg, #d4d4d4 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #d4d4d4 75%), 
+                linear-gradient(-45deg, transparent 75%, #d4d4d4 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .window {
+            background: #c0c0c0;
+            border: 3px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            box-shadow: 3px 3px 0 #000000;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .title-bar {
+            background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+            color: white;
+            padding: 4px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .title-bar-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .title-bar-buttons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .window-btn {
+            width: 20px;
+            height: 18px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            color: #000;
+        }
+
+        .window-btn:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+        }
+
+        .window-content {
+            padding: 15px;
+            background: #c0c0c0;
+        }
+
+        .btn {
+            background: #c0c0c0;
+            border: 3px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            padding: 8px 20px;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            cursor: pointer;
+            color: #000;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+            padding: 9px 19px 7px 21px;
+        }
+
+        .btn-primary {
+            background: #ff69b4;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-primary:active {
+            background: #ff1493;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .input-box {
+            background: #ffffff;
+            border: 3px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            padding: 8px;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            width: 100%;
+            outline: none;
+        }
+
+        .group-box {
+            border: 3px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .group-box-title {
+            position: absolute;
+            top: -12px;
+            left: 10px;
+            background: #c0c0c0;
+            padding: 0 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .home-page {
+            display: block;
+        }
+
+        .header-text {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-item {
+            background: #c0c0c0;
+            border: 3px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            padding: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.1s;
+        }
+
+        .category-item:hover {
+            background: #d4d4d4;
+        }
+
+        .category-item:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+        }
+
+        .category-icon {
+            font-size: 32px;
+            width: 50px;
+            text-align: center;
+        }
+
+        .category-info {
+            flex: 1;
+        }
+
+        .category-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .category-desc {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .blindbox-page {
+            display: none;
+        }
+
+        .blindbox-display {
+            background: #000000;
+            border: 3px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .blindbox-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .blindbox-text {
+            color: #00ff00;
+            font-size: 20px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .action-area {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .result-card {
+            background: #ffffff;
+            border: 3px solid;
+            border-color: #000000 #ffffff #ffffff #000000;
+            padding: 20px;
+            text-align: center;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-emoji {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000080;
+        }
+
+        .result-content {
+            font-size: 20px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .result-tag {
+            display: inline-block;
+            background: #000080;
+            color: white;
+            padding: 4px 12px;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: #808080;
+            border: 2px solid;
+            border-color: #000000 #ffffff #ffffff #000000;
+            height: 25px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #ff69b4 0%, #ff1493 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .bottom-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .bottom-buttons .btn {
+            flex: 1;
+        }
+
+        .status-bar {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            padding: 4px 8px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .pixel-decoration {
+            position: fixed;
+            font-size: 24px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 10px;
+            }
+            
+            .window {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pixel-decoration" style="top: 10%; left: 5%;">✨</div>
+    <div class="pixel-decoration" style="top: 20%; right: 8%;">🌟</div>
+    <div class="pixel-decoration" style="bottom: 15%; left: 10%;">💫</div>
+    <div class="pixel-decoration" style="bottom: 25%; right: 5%;">⭐</div>
+
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-bar-text">
+                <span>🎀</span>
+                <span id="windowTitle">LifeChoice.exe</span>
+            </div>
+            <div class="title-bar-buttons">
+                <button class="window-btn">_</button>
+                <button class="window-btn">□</button>
+                <button class="window-btn">×</button>
+            </div>
+        </div>
+
+        <div class="window-content">
+            <div class="home-page" id="homePage">
+                <div class="group-box">
+                    <span class="group-box-title">📂 选择分类</span>
+                    
+                    <div class="header-text">
+                        请选择一类盲盒开始探索！<br>
+                        <span style="font-size: 16px; color: #555;">Select a category to begin</span>
+                    </div>
+
+                    <div class="category-list">
+                        <div class="category-item" onclick="goToCategory('life')">
+                            <span class="category-icon">🍜</span>
+                            <div class="category-info">
+                                <div class="category-name">生活选择盲盒</div>
+                                <div class="category-desc">吃喝/日常小习惯</div>
+                            </div>
+                            <span>▶</span>
+                        </div>
+
+                        <div class="category-item" onclick="goToCategory('relax')">
+                            <span class="category-icon">🧸</span>
+                            <div class="category-info">
+                                <div class="category-name">放松治愈盲盒</div>
+                                <div class="category-desc">休息、治愈行为</div>
+                            </div>
+                            <span>▶</span>
+                        </div>
+
+                        <div class="category-item" onclick="goToCategory('funny')">
+                            <span class="category-icon">🤪</span>
+                            <div class="category-info">
+                                <div class="category-name">搞笑随机盲盒</div>
+                                <div class="category-desc">幽默、恶搞建议</div>
+                            </div>
+                            <span>▶</span>
+                        </div>
+
+                        <div class="category-item" onclick="goToCategory('productivity')">
+                            <span class="category-icon">⚡</span>
+                            <div class="category-info">
+                                <div class="category-name">效率提升盲盒</div>
+                                <div class="category-desc">学习/工作小任务</div>
+                            </div>
+                            <span>▶</span>
+                        </div>
+
+                        <div class="category-item" onclick="goToCategory('creative')">
+                            <span class="category-icon">🎨</span>
+                            <div class="category-info">
+                                <div class="category-name">创意灵感盲盒</div>
+                                <div class="category-desc">创作灵感或挑战</div>
+                            </div>
+                            <span>▶</span>
+                        </div>
+
+                        <div class="category-item" onclick="goToCategory('health')">
+                            <span class="category-icon">🌸</span>
+                            <div class="category-info">
+                                <div class="category-name">运动健康盲盒</div>
+                                <div class="category-desc">轻运动/健康小动作</div>
+                            </div>
+                            <span>▶</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-bar">
+                    <span>📊 6 categories available</span>
+                    <span>Ready</span>
+                </div>
+            </div>
+
+            <div class="blindbox-page" id="blindboxPage">
+                <div class="group-box">
+                    <span class="group-box-title" id="categoryTitle">🎁 盲盒</span>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                        <div class="progress-text" id="progressText">Waiting...</div>
+                    </div>
+
+                    <div class="blindbox-display" id="blindboxDisplay">
+                        <div class="blindbox-icon" id="blindboxIcon">📦</div>
+                        <div class="blindbox-text" id="blindboxText">Ready to open!</div>
+                    </div>
+
+                    <div class="action-area" id="actionArea">
+                        <button class="btn btn-primary" onclick="drawBlindBox()">
+                            🎲 抽盲盒 (DRAW)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bottom-buttons">
+                    <button class="btn" onclick="goHome()">
+                        ← 返回主页 (BACK)
+                    </button>
+                </div>
+
+                <div class="status-bar">
+                    <span id="statusText">Click DRAW to start</span>
+                    <span>v1.0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const blindboxData = {
+            life: {
+                title: '🍜 生活选择盲盒',
+                icon: '🍜',
+                items: [
+                    { emoji: '🍜', title: '今日美食', content: '去尝尝那家你一直想去的面馆吧！', tag: '美食探索' },
+                    { emoji: '☕', title: '咖啡时光', content: '下午3点，给自己泡一杯手冲咖啡', tag: '小确幸' },
+                    { emoji: '📚', title: '阅读时刻', content: '今晚睡前读10页书，什么书都行', tag: '自我提升' },
+                    { emoji: '🎵', title: '音乐疗愈', content: '随机播放一首你出生那年的歌', tag: '怀旧时光' },
+                    { emoji: '🌅', title: '早起挑战', content: '明天早起15分钟，慢慢享受早餐', tag: '生活习惯' },
+                    { emoji: '📞', title: '联系老友', content: '给很久没联系的朋友发条消息', tag: '人际关系' },
+                    { emoji: '🌱', title: '绿植养护', content: '给你的植物浇浇水，跟它说说话', tag: '生活仪式' },
+                    { emoji: '🛁', title: '泡泡浴', content: '今晚泡个热水澡，加点精油', tag: '自我关爱' },
+                    { emoji: '📝', title: '日记时间', content: '写下今天最让你感恩的三件事', tag: '正念练习' },
+                    { emoji: '🍳', title: '下厨挑战', content: '尝试做一道你从没做过的菜', tag: '技能解锁' }
+                ]
+            },
+            relax: {
+                title: '🧸 放松治愈盲盒',
+                icon: '🧸',
+                items: [
+                    { emoji: '🧸', title: '抱抱玩偶', content: '紧紧抱住你最喜欢的毛绒玩具', tag: '温暖治愈' },
+                    { emoji: '🌸', title: '赏花散步', content: '去附近的公园走走，看看花花草草', tag: '自然疗愈' },
+                    { emoji: '🎬', title: '电影之夜', content: '看一部治愈系电影，备好零食', tag: '娱乐放松' },
+                    { emoji: '🛋️', title: '沙发瘫', content: '什么都不做，就躺在沙发上发呆', tag: '允许摆烂' },
+                    { emoji: '🎨', title: '涂色解压', content: '拿出涂色本，随意涂满一页', tag: '艺术创作' },
+                    { emoji: '🎧', title: '白噪音', content: '听雨声/海浪声，小睡20分钟', tag: '声音疗愈' },
+                    { emoji: '🕯️', title: '香薰时光', content: '点上香薰蜡烛，听首轻音乐', tag: '氛围营造' },
+                    { emoji: '🌙', title: '早睡一天', content: '今晚10点前上床，不看手机', tag: '作息调整' },
+                    { emoji: '📵', title: '数字排毒', content: '接下来1小时不碰任何电子设备', tag: '断舍离' },
+                    { emoji: '😴', title: '午睡许可', content: '如果有条件，现在就去小睡一会儿', tag: '充电时刻' }
+                ]
+            },
+            funny: {
+                title: '🤪 搞笑随机盲盒',
+                icon: '🤪',
+                items: [
+                    { emoji: '🤪', title: '鬼脸挑战', content: '对着镜子做5个最丑的鬼脸', tag: '颜值考验' },
+                    { emoji: '🕺', title: '尬舞时间', content: '放一首嗨歌，在房间里自由尬舞', tag: '释放天性' },
+                    { emoji: '🤳', title: '自拍挑战', content: '用前置摄像头做10个鬼脸连拍', tag: '颜值考验' },
+                    { emoji: '🎭', title: '角色扮演', content: '用新闻联播腔调读这段文字', tag: '戏精上身' },
+                    { emoji: '😺', title: '猫语翻译', content: '对着你家猫/狗说5分钟心里话', tag: '跨物种交流' },
+                    { emoji: '🎤', title: '浴室歌王', content: '在浴室大声唱一首你最爱的歌', tag: '音乐才华' },
+                    { emoji: '🍜', title: '吃播模仿', content: '录一段自己吃东西的视频，配上夸张解说', tag: '网红体验' },
+                    { emoji: '🧘', title: '瑜伽搞笑', content: '尝试做一个高难瑜伽动作，拍照留念', tag: '柔韧挑战' },
+                    { emoji: '🎲', title: '随机穿搭', content: '闭着眼睛从衣柜里摸3件衣服穿上', tag: '时尚冒险' },
+                    { emoji: '📱', title: '朋友圈整活', content: '发条朋友圈："我是一只鱼" 不加解释', tag: '社交实验' }
+                ]
+            },
+            productivity: {
+                title: '⚡ 效率提升盲盒',
+                icon: '⚡',
+                items: [
+                    { emoji: '⚡', title: '番茄工作', content: '设定25分钟专注做一件事，不许分心', tag: '专注力' },
+                    { emoji: '📋', title: '清单整理', content: '写下今天要完成的3件最重要的事', tag: '任务管理' },
+                    { emoji: '🗑️', title: '桌面清理', content: '花10分钟整理电脑桌面和文件夹', tag: '数字整理' },
+                    { emoji: '⏰', title: '时间审计', content: '记录接下来1小时你做了什么', tag: '时间意识' },
+                    { emoji: '🎯', title: '微习惯', content: '做一个俯卧撑/背一个单词/喝杯水', tag: '小步前进' },
+                    { emoji: '📧', title: '邮件清零', content: '把收件箱处理到只剩5封以内', tag: '信息整理' },
+                    { emoji: '📵', title: '专注模式', content: '关闭所有通知，专注工作45分钟', tag: '深度工作' },
+                    { emoji: '📝', title: '周计划', content: '规划下周要完成的3个主要目标', tag: '目标设定' },
+                    { emoji: '🎓', title: '技能学习', content: '花20分钟学习一个新知识点', tag: '持续成长' },
+                    { emoji: '✅', title: '拖延终结', content: '把那件拖了很久的事做了吧！', tag: '行动力量' }
+                ]
+            },
+            creative: {
+                title: '🎨 创意灵感盲盒',
+                icon: '🎨',
+                items: [
+                    { emoji: '🎨', title: '随手涂鸦', content: '在纸上画一个你此刻心情的图案', tag: '自由创作' },
+                    { emoji: '✍️', title: '微小说', content: '写一段50字以内的微型小说', tag: '文字游戏' },
+                    { emoji: '📸', title: '摄影挑战', content: '用手机拍一张"光影"主题的照片', tag: '视觉训练' },
+                    { emoji: '🎵', title: '旋律创作', content: '哼一段原创旋律，录下来', tag: '音乐创作' },
+                    { emoji: '🎭', title: '角色创造', content: '创造一个虚拟人物，写下TA的3个特点', tag: '故事构建' },
+                    { emoji: '🏠', title: '空间改造', content: '重新摆放房间里的一个角落', tag: '环境设计' },
+                    { emoji: '👕', title: '旧衣新穿', content: '用现有衣服搭配出一套新风格', tag: '时尚创意' },
+                    { emoji: '🍳', title: '创意料理', content: '用冰箱里的食材创造一道新菜', tag: '美食创新' },
+                    { emoji: '💡', title: '问题解决', content: '想一个生活中小问题，列出3个解决方案', tag: '创新思维' },
+                    { emoji: '🎬', title: '短视频', content: '拍摄一个15秒的创意小视频', tag: '多媒体' }
+                ]
+            },
+            health: {
+                title: '🌸 运动健康盲盒',
+                icon: '🌸',
+                items: [
+                    { emoji: '🌸', title: '伸展运动', content: '站起来做3分钟全身伸展', tag: '活力唤醒' },
+                    { emoji: '💪', title: '俯卧撑挑战', content: '做你能做最多数量的俯卧撑', tag: '力量训练' },
+                    { emoji: '🏃', title: '原地慢跑', content: '原地慢跑3分钟，保持心率', tag: '有氧训练' },
+                    { emoji: '🧘', title: '拉伸放松', content: '做5分钟全身拉伸，每个动作保持30秒', tag: '柔韧性' },
+                    { emoji: '💧', title: '喝水提醒', content: '现在去喝一杯温水，慢慢喝', tag: '水分补充' },
+                    { emoji: '👁️', title: '眼保健操', content: '做一遍眼保健操，远离屏幕5分钟', tag: '护眼' },
+                    { emoji: '🦶', title: '踮脚练习', content: '踮脚尖站立30秒，重复3组', tag: '小腿训练' },
+                    { emoji: '🫁', title: '深呼吸', content: '腹式呼吸5分钟，吸气4秒呼气6秒', tag: '呼吸训练' },
+                    { emoji: '🚶', title: '散步时间', content: '出门散步15分钟，不看手机', tag: '轻度运动' },
+                    { emoji: '🥗', title: '健康加餐', content: '吃点水果或坚果，拒绝垃圾食品', tag: '饮食健康' }
+                ]
+            }
+        };
+
+        let currentCategory = null;
+        let loadingInterval = null;
+        let isLoading = false;
+
+        function goToCategory(category) {
+            currentCategory = category;
+            const data = blindboxData[category];
+            
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('blindboxPage').style.display = 'block';
+            document.getElementById('windowTitle').textContent = data.title;
+            document.getElementById('categoryTitle').textContent = data.title;
+            
+            resetBlindBox();
+        }
+
+        function goHome() {
+            if (loadingInterval) {
+                clearInterval(loadingInterval);
+                loadingInterval = null;
+            }
+            isLoading = false;
+            
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('blindboxPage').style.display = 'none';
+            document.getElementById('windowTitle').textContent = 'LifeChoice.exe';
+            currentCategory = null;
+        }
+
+        function resetBlindBox() {
+            if (loadingInterval) {
+                clearInterval(loadingInterval);
+                loadingInterval = null;
+            }
+            isLoading = false;
+            
+            const data = blindboxData[currentCategory];
+            
+            document.getElementById('blindboxDisplay').innerHTML = `
+                <div class="blindbox-icon" id="blindboxIcon">${data.icon}</div>
+                <div class="blindbox-text" id="blindboxText">Ready to open! (准备开启)</div>
+            `;
+            
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('progressText').textContent = 'Waiting...';
+            document.getElementById('statusText').textContent = 'Click DRAW to start';
+            
+            document.getElementById('actionArea').innerHTML = `
+                <button class="btn btn-primary" onclick="drawBlindBox()">
+                    🎲 抽盲盒 (DRAW)
+                </button>
+            `;
+        }
+
+        function drawBlindBox() {
+            if (isLoading) {
+                return;
+            }
+            
+            isLoading = true;
+            
+            if (loadingInterval) {
+                clearInterval(loadingInterval);
+                loadingInterval = null;
+            }
+            
+            const data = blindboxData[currentCategory];
+            document.getElementById('blindboxDisplay').innerHTML = `
+                <div class="blindbox-icon" id="blindboxIcon">${data.icon}</div>
+                <div class="blindbox-text" id="blindboxText">Opening... (开启中)</div>
+            `;
+            
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const statusText = document.getElementById('statusText');
+            const blindboxIcon = document.getElementById('blindboxIcon');
+            
+            document.getElementById('actionArea').innerHTML = `
+                <button class="btn" disabled>
+                    🔄 开启中... (OPENING)
+                </button>
+            `;
+            
+            progressFill.style.width = '0%';
+            let progress = 0;
+            
+            loadingInterval = setInterval(() => {
+                progress += 10;
+                
+                if (progress > 100) {
+                    progress = 100;
+                }
+                
+                progressFill.style.width = progress + '%';
+                progressText.textContent = `Loading... ${progress}%`;
+                statusText.textContent = 'Opening blind box...';
+                
+                if (blindboxIcon) {
+                    blindboxIcon.style.opacity = progress % 20 < 10 ? '1' : '0.5';
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
+                    loadingInterval = null;
+                    isLoading = false;
+                    showResult();
+                }
+            }, 100);
+        }
+
+        function showResult() {
+            const data = blindboxData[currentCategory];
+            const randomItem = data.items[Math.floor(Math.random() * data.items.length)];
+            
+            document.getElementById('blindboxDisplay').innerHTML = `
+                <div class="result-card">
+                    <div class="result-emoji">${randomItem.emoji}</div>
+                    <div class="result-title">${randomItem.title}</div>
+                    <div class="result-content">${randomItem.content}</div>
+                    <span class="result-tag">${randomItem.tag}</span>
+                </div>
+            `;
+            
+            document.getElementById('progressText').textContent = 'Complete!';
+            document.getElementById('statusText').textContent = 'Item received!';
+            
+            document.getElementById('actionArea').innerHTML = `
+                <button class="btn btn-primary" onclick="drawBlindBox()">
+                    🔄 再抽一次 (AGAIN)
+                </button>
+            `;
+        }
+    </script>
+</body>
+</html>
